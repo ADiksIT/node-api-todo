@@ -1,7 +1,34 @@
 const { Router } = require("express");
-const checkUserById = require("../checks");
 const router = new Router();
+const checkUserById = require("../checks");
 const User = require("../models/User");
+
+router.post("/users/:id/change/:idtodo", async (req, res) => {
+  try {
+    const {id, idtodo} = req.params;
+    const obj = await checkUserById(id, User);
+
+    if (obj.status !== 200) {
+      res.status(obj.status).json(obj.message);
+    }
+
+    const {text, completed} = req.body;
+
+    obj.candidate.todos.some(todo => {
+      if (todo.id === idtodo) {
+        todo.text = text;
+        todo.completed = completed;
+        return true;
+      }
+    })
+
+    await obj.candidate.save();
+
+    res.status(200).json({message: 'Todo has been change'})
+  } catch (error) {
+    res.status(500).json({ message: "Error", error });
+  }
+})
 
 router.post("/users/:id", async (req, res) => {
   try {
