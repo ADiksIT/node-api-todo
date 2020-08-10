@@ -9,7 +9,6 @@ passport.deserializeUser((id , done) => User.findById(id, (err, user) => done(er
 
 passport.use( new LocalStrategy({ usernameField: "login" }, async (login, password, done) => {
       try {
-
         const candidate = await User.findOne({ login })
 
         if (!candidate) {
@@ -19,9 +18,8 @@ passport.use( new LocalStrategy({ usernameField: "login" }, async (login, passwo
           newUser.todos.push(newTodo);
 
           const salt = await bcrypt.genSalt(10)
-          const hash = await bcrypt.hash(newUser.password, salt)
 
-          newUser.password = hash;
+          newUser.password = await bcrypt.hash(newUser.password, salt);
 
           await newUser.save();
 

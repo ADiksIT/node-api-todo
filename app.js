@@ -2,6 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const mongoose = require("mongoose");
+const cors = require("cors")
 
 const passport = require("./passport/passport");
 
@@ -20,6 +21,7 @@ mongoose
   .then(console.log(`MongoDB connected ${MONGO_URI}`))
   .catch((err) => console.log(err));
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

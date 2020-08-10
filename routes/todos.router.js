@@ -3,7 +3,7 @@ const router = new Router();
 const checkUserById = require("../checks");
 const User = require("../models/User");
 
-router.post("/users/:id/change/:idtodo", async (req, res) => {
+const changeTodo = async (req, res, field) => {
   try {
     const {id, idtodo} = req.params;
     const obj = await checkUserById(id, User);
@@ -12,12 +12,11 @@ router.post("/users/:id/change/:idtodo", async (req, res) => {
       res.status(obj.status).json(obj.message);
     }
 
-    const {text, completed} = req.body;
+    const data = req.body[field];
 
     obj.candidate.todos.some(todo => {
       if (todo.id === idtodo) {
-        todo.text = text;
-        todo.completed = completed;
+        todo[field] = data;
         return true;
       }
     })
@@ -28,7 +27,12 @@ router.post("/users/:id/change/:idtodo", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error", error });
   }
-})
+}
+
+router.post("/users/:id/change/completed/:idtodo", (req, res) => changeTodo(req, res, 'completed'))
+
+router.post("/users/:id/change/text/:idtodo", (req, res) => changeTodo(req, res, 'text'))
+
 
 router.post("/users/:id", async (req, res) => {
   try {
@@ -69,6 +73,7 @@ router.get("/users/:id/delete/:idtodo", async (req, res) => {
   try {
     const id = req.params.id;
     const idTodo = req.params.idtodo;
+
     const obj = await checkUserById(id, User);
 
     if (obj.status !== 200) {
