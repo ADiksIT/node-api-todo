@@ -9,6 +9,7 @@ passport.deserializeUser((id , done) => User.findById(id, (err, user) => done(er
 
 passport.use( new LocalStrategy({ usernameField: "login" }, async (login, password, done) => {
       try {
+
         const candidate = await User.findOne({ login })
 
         if (!candidate) {
