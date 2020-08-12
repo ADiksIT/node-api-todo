@@ -46,7 +46,7 @@ app.use(passport.session());
 
 // Routes
 app.use('/', (req, res) => {
-  req.send('App has been start');
+  res.send(`App has been start ${PORT}`);
 });
 
 app.use('/api/auth', require('./routes/auth.routes'));
