@@ -9,6 +9,7 @@ const passport = require('./passport/passport');
 
 const app = express();
 
+const PORT = process.env.PORT || 5000;
 const MONGO_URI =
   'mongodb+srv://admin:admin@cluster0.ndp2g.azure.mongodb.net/todo?retryWrites=true&';
 
@@ -44,7 +45,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
+app.use('/', (req, res) => {
+  req.send('App has been start');
+});
+
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/todos', require('./routes/todos.router'));
 
-app.listen(() => console.log(`Backend listening on port!`));
+app.listen(PORT, () => console.log(`Backend listening on port!`));
