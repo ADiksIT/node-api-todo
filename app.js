@@ -45,11 +45,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/', (req, res) => {
-  res.send(`App has been start ${PORT}`);
+app.get('/', (req, res) => {
+  res.send(
+    `App has been start ${PORT}, it's api, app: https://adiksit.github.io/todo-list/`,
+  );
 });
 
 app.use('/api/auth', require('./routes/auth.routes'));
-app.use('/api/todos', require('./routes/todos.router'));
+app.use('/api/todos', require('./routes/todos.routes'));
 
-app.listen(PORT, () => console.log(`Backend listening on port!`));
+app.listen(PORT, () => console.log(`Backend listening on port! ${PORT}`));
