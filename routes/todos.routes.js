@@ -37,6 +37,29 @@ router.post('/users/:id/change/text/:idtodo', (req, res) =>
   changeTodo(req, res, 'text'),
 );
 
+router.post('/users/:id/add_all', async (req, res) => {
+  try {
+    console.log('add');
+    const idUser = req.params.id;
+
+    const obj = await checkUserById(idUser, User);
+
+    if (obj.status !== 200) {
+      res.status(obj.status).json(obj.message);
+    }
+
+    const { data } = req.body;
+
+    obj.candidate.todos = [...obj.candidate.todos, ...data];
+    await obj.candidate.save();
+
+    res.status(201).json(obj.candidate.todos);
+  } catch (error) {
+    console.log('add error');
+    res.status(500).json({ message: 'Error', error });
+  }
+});
+
 router.post('/users/:id', async (req, res) => {
   try {
     const idUser = req.params.id;
